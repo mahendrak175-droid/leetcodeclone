@@ -46,3 +46,31 @@ export const onBoardUser = async () => {
     };
   }
 };
+
+export const getUserRole = async () => {
+  try {
+    const user = await currentUser();
+    if (!user) {
+      return {
+        success: false,
+        error: "user is not authenticated",
+      };
+    }
+    const { id } = user;
+    const userRole = await prisma.user.findUnique({
+      where: {
+        clerkId: id,
+      },
+      select: {
+        role: true,
+      },
+    });
+    return userRole.role;
+  } catch (error) {
+    console.error("error finding role", error);
+    return {
+      success: false,
+      error: "failed to fetch user role",
+    };
+  }
+};
