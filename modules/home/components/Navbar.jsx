@@ -59,7 +59,7 @@ const Navbar = ({ userRole }) => {
                     <SignInButton />
                     <SignUpButton />
                   </Show>
-                  {userRole === "admin" && (
+                  {userRole === "ADMIN" && (
                     <Link
                       href="/create-problem"
                       className=" text-gray-800 mr-2 dark:text-gray-200 px-3 py-2 rounded-md border text-sm font-medium block"

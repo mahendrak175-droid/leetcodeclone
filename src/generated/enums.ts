@@ -15,3 +15,12 @@ export const userRole = {
 } as const
 
 export type userRole = (typeof userRole)[keyof typeof userRole]
+
+
+export const Difficulty = {
+  EASY: 'EASY',
+  MEDIUM: 'MEDIUM',
+  HARD: 'HARD'
+} as const
+
+export type Difficulty = (typeof Difficulty)[keyof typeof Difficulty]

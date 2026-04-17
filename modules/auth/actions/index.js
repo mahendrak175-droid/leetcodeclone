@@ -13,6 +13,7 @@ export const onBoardUser = async () => {
       };
     }
     const { firstName, lastName, id, imageUrl, emailAddresses } = user;
+    console.log(user, "user");
 
     const newUser = await prisma.user.upsert({
       where: {
@@ -65,12 +66,69 @@ export const getUserRole = async () => {
         role: true,
       },
     });
-    return userRole.role;
+    return userRole?.role;
   } catch (error) {
     console.error("error finding role", error);
     return {
       success: false,
       error: "failed to fetch user role",
+    };
+  }
+};
+
+export const getUserRoleAndId = async () => {
+  try {
+    const user = await currentUser();
+    if (!user) {
+      return {
+        success: false,
+        error: "user is not authenticated",
+      };
+    }
+    const { id } = user;
+    const userRole = await prisma.user.findUnique({
+      where: {
+        clerkId: id,
+      },
+      select: {
+        role: true,
+        id: true,
+      },
+    });
+    return userRole;
+  } catch (error) {
+    console.error("error finding role and id", error);
+    return {
+      success: false,
+      error: "failed to fetch user role and id",
+    };
+  }
+};
+
+export const getCurrentUser = async () => {
+  try {
+    const user = await currentUser();
+    if (!user) {
+      return {
+        success: false,
+        error: "user is not authenticated",
+      };
+    }
+    const { id } = user;
+    const userId = await prisma.user.findUnique({
+      where: {
+        clerkId: id,
+      },
+      select: {
+        id: true,
+      },
+    });
+    return userId;
+  } catch (error) {
+    console.error("error finding user id", error);
+    return {
+      success: false,
+      error: "failed to fetch user id",
     };
   }
 };
