@@ -6,7 +6,6 @@ import React from "react";
 const page = async () => {
   const user = await getUserRoleAndId();
   const { data: problems, error, message } = await getAllProblems();
-  console.log(user, problems, error);
 
   if (error) {
     return (

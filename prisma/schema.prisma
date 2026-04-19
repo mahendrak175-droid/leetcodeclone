@@ -35,6 +35,7 @@ model User {
   updatedAt      DateTime        @updatedAt
   solvedProblems ProblemSolved[]
   problems       Problem[]
+  submissions    Submission[]
 
   @@index([role])
 }
@@ -57,8 +58,50 @@ model Problem {
   updatedAt          DateTime        @updatedAt
   user               User            @relation(fields: [userId], references: [id], onDelete: Cascade)
   solvedBy           ProblemSolved[]
+  submissions        Submission[]
 
   @@index([difficulty])
+}
+
+model Submission {
+  id            String           @id @default(uuid())
+  userId        String
+  problemId     String
+  sourceCode    Json
+  language      String
+  status        String // accepted, wrong answer, time limit exceeded, etc.
+  stdin         String?
+  stdout        String?
+  stderr        String?
+  compileOutput String?
+  meomery       String?
+  time          String?
+  testCases     TestCaseResult[]
+  createdAt     DateTime         @default(now())
+
+  problem Problem @relation(fields: [problemId], references: [id], onDelete: Cascade)
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([status])
+}
+
+model TestCaseResult {
+  id            String   @id @default(uuid())
+  submissionId  String
+  testCase      Int
+  passed        Boolean
+  stdout        String?
+  expected      String
+  stderr        String?
+  compileOutput String?
+  meomery       String?
+  time          String?
+  status        String // accepted, wrong answer, time limit exceeded, etc.
+  createdAt     DateTime @default(now())
+
+  submission Submission @relation(fields: [submissionId], references: [id], onDelete: Cascade)
+
+  @@index([submissionId])
 }
 
 model ProblemSolved {

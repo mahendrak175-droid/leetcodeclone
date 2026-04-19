@@ -1,8 +1,4 @@
-import {
-  getJudge0LanguageId,
-  getJudgeResults,
-  pollJudgeResults,
-} from "@/lib/judge0";
+import { getJudgeResults, getPistonLanguage } from "@/lib/judge0";
 import { getCurrentUser, getUserRole } from "@/modules/auth/actions";
 
 import { currentUser } from "@clerk/nextjs/server";
@@ -34,6 +30,8 @@ export async function POST(request) {
       testCases,
       codeSnippets,
       referenceSolutions,
+      editorial,
+      hints,
     } = body;
 
     if (
@@ -78,8 +76,7 @@ export async function POST(request) {
     }
     const allResults = [];
     for (const [language, solutionCode] of Object.entries(referenceSolutions)) {
-      const languageId = getJudge0LanguageId(language);
-      if (!languageId) {
+      if (!language) {
         return NextResponse.json(
           {
             error: `unsupported language ${language}`,
@@ -87,21 +84,21 @@ export async function POST(request) {
           { status: 400 },
         );
       }
-
+      // console.log(solutionCode, "solution code");
       const submission = testCases.map(({ input, output }) => ({
         source_code: solutionCode,
-        language_id: languageId,
+        language: language,
         stdin: input,
         expected_output: output,
       }));
 
       const data = await getJudgeResults(submission);
-      const tokens = data.map((res) => res.token);
+      // const tokens = data.map((res) => res.token);
 
-      const results = await pollJudgeResults(tokens);
-      allResults.push({ language, results });
+      // const results = await pollJudgeResults(tokens);
+      allResults.push({ language, data });
     }
-    console.log(JSON.stringify(allResults), "all results");
+    // console.log(JSON.stringify(allResults), "all results");
 
     try {
       const newProblem = await prisma.problem.create({
@@ -116,6 +113,8 @@ export async function POST(request) {
           codeSnippets,
           referenceSolutions,
           userId: user.id,
+          editorial,
+          hints,
         },
       });
       return NextResponse.json(

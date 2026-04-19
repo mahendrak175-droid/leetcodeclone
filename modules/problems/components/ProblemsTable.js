@@ -33,6 +33,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import Link from "next/link";
 
 const ProblemsTable = ({ problems, user }) => {
   const [tag, selectedTag] = useState("All Tags");
@@ -191,7 +192,9 @@ const ProblemsTable = ({ problems, user }) => {
                       problemSolved={solvedBy}
                     />
                   </TableCell>
-                  <TableCell>{title}</TableCell>
+                  <TableCell>
+                    <Link href={`/problem/${id}`}>{title}</Link>
+                  </TableCell>
                   <TableCell>
                     <div className="flex flex-wrap gap-2">
                       {tags.map((t, i) => (

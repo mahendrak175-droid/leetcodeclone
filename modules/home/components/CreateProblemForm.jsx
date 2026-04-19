@@ -454,7 +454,6 @@ const schema = z.object({
 const CreateProblemForm = () => {
   const [toggleValue, setToggleValue] = useState("Dp problem");
   const router = useRouter();
-  console.log(toggleValue);
   const {
     register,
     handleSubmit,
@@ -468,8 +467,6 @@ const CreateProblemForm = () => {
     defaultValues: emptyForm,
   });
 
-  console.log(errors, "errors");
-
   //   useEffect(() => {
   //     register("tags");
   //   }, [register]);
@@ -482,8 +479,6 @@ const CreateProblemForm = () => {
   const referenceSolutions = watch("referenceSolutions");
 
   const examples = watch("examples");
-
-  console.log(examples);
 
   const addTag = (tag) => {
     if (!tag.trim()) return;
@@ -528,8 +523,6 @@ const CreateProblemForm = () => {
   };
 
   const onHandleSubmit = async (data) => {
-    console.log(data, "XXXXXXXXXXDATAXXXXXXXXXX");
-
     try {
       const postProblem = await fetch("/api/create-problem", {
         method: "POST",
@@ -539,7 +532,6 @@ const CreateProblemForm = () => {
         body: JSON.stringify(data),
       });
       toast.success("Problem created successfully");
-      console.log(postProblem);
       router.push("/problems");
     } catch (error) {
       console.error("error on creating", error);
@@ -550,7 +542,6 @@ const CreateProblemForm = () => {
   };
 
   const handleEditorChange = (value, event, language) => {
-    console.log("cuurrent value is", value);
     if (!value.trim()) {
       return;
     }
@@ -566,7 +557,6 @@ const CreateProblemForm = () => {
   };
 
   const handleReferenceSolutions = (value, event, language) => {
-    console.log("cuurrent value is", value);
     if (!value.trim()) {
       return;
     }
@@ -582,7 +572,6 @@ const CreateProblemForm = () => {
   };
 
   const handleExampleInput = (value, language) => {
-    console.log("cuurrent value is", value);
     if (!value.trim()) {
       return;
     }
@@ -600,7 +589,6 @@ const CreateProblemForm = () => {
     );
   };
   const handleExampleOutput = (value, language) => {
-    console.log("cuurrent value is", value);
     if (!value.trim()) {
       return;
     }
@@ -618,7 +606,6 @@ const CreateProblemForm = () => {
     );
   };
   const handleExampleExplanation = (value, language) => {
-    console.log("cuurrent value is", value);
     if (!value.trim()) {
       return;
     }
@@ -865,7 +852,7 @@ const CreateProblemForm = () => {
                       <Editor
                         height="200px"
                         width="100%"
-                        language={language.toUpperCase()}
+                        language={language.toLowerCase()}
                         theme="vs-dark"
                         defaultValue="// some comment"
                         value={codeSnippets[language]}
@@ -886,7 +873,7 @@ const CreateProblemForm = () => {
                       <Editor
                         height="200px"
                         width="100%"
-                        language={language.toUpperCase()}
+                        language={language.toLowerCase()}
                         theme="vs-dark"
                         value={referenceSolutions[language]}
                         defaultValue="// some comment"

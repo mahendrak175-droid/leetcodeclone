@@ -10,7 +10,6 @@ import React from "react";
 const page = async () => {
   const userRole = await getUserRole();
   const user = await currentUser();
-  console.log(userRole, "userrole");
 
   if (userRole !== "ADMIN") {
     redirect("/");
